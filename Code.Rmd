@@ -8,21 +8,81 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r load_packages}
+### Load Packages
+
+```{r load_packages, message=FALSE}
 # install.packages("tidyverse")
 library(tidyverse)
 # install.packages("readxl")
 library(readxl)
+# install.packages("ggplot2")
+library(ggplot2)
 ```
+
+### Load Data
 
 ```{r load_data}
 eugene_homes <- read_excel(here::here("data","EugeneHomes.xlsx"))
 ```
 
-```{r anova}
+### Exploratory Data Analysis
+
+```{r exploratory}
+eugene_homes%>%
+  ggplot()+
+  geom_line(mapping=aes(y=size,x=age))
+  
+eugene_homes%>%
+  ggplot()+
+  geom_line(mapping=aes(y=lot,x=price))
+
+
+```
+
+```{r garage}
+eugene_homes%>%
+  ggplot()+
+  geom_boxplot(mapping=aes(y=lot,x=garage))
+```
+
+```{r bath}
+eugene_homes%>%
+  ggplot()+
+  geom_boxplot(mapping=aes(y=price,x=bath))
+```
+
+```{r lot}
+eugene_homes%>%
+  ggplot()+
+  geom_bar(mapping=aes(x=lot))
+```
+
+
+## Analysis
+
+### ANOVA 
+
+Normality check
+
+```{r anova_assumptions}
+
+eugene_homes%>%
+  ggplot()+
+  geom_histogram(mapping=aes(x=price))+
+  labs(title="Normality of Price")
+
+```
+
+```{r 2_way_anova}
+# eugene_homes%>%
+# anova(y~age)
+
+```
+
+```{r regression_assumptions}
 
 ```
 
 ```{r regression}
-
+# lm(y~age+lot,)
 ```
