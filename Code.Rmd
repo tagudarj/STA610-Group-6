@@ -1,0 +1,26 @@
+---
+title: "Code"
+author: "Group 6"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load_packages}
+# install.packages("tidyverse")
+library(tidyverse)
+# install.packages("readxl")
+# library(readxl) to read the excel file
+```
+
+```{r load_data}
+# click dataset in the datafile 
+# click [Import Dataset...]
+# click [import] in the popup window
+```
+
+```{r anova}
+
+```
