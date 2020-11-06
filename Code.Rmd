@@ -12,15 +12,17 @@ knitr::opts_chunk$set(echo = TRUE)
 # install.packages("tidyverse")
 library(tidyverse)
 # install.packages("readxl")
-# library(readxl) to read the excel file
+library(readxl)
 ```
 
 ```{r load_data}
-# click dataset in the datafile 
-# click [Import Dataset...]
-# click [import] in the popup window
+eugene_homes <- read_excel(here::here("data","EugeneHomes.xlsx"))
 ```
 
 ```{r anova}
+
+```
+
+```{r regression}
 
 ```
