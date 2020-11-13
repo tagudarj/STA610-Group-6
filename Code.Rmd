@@ -3,27 +3,212 @@ title: "Code"
 author: "Group 6"
 output: html_document
 ---
+#import code
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+
+
+```{r read_data}
+library(tidyverse)
+EugeneHomes <- read_csv("data/EugeneHomes.csv")
 ```
 
-## R Markdown
+#means and summary statistics by group
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+```{r}
+library(Rmisc)
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+sum = summarySE(EugeneHomes,
+                measurevar="price",groupvars=c("status","garage"))
+sum
 ```
 
-## Including Plots
 
-You can also embed plots, for example:
+#interaction plot using summary statistics
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r}
+library(ggplot2)
+pd = position_dodge(.2)
+ggplot(sum, aes(x=status,
+                y=price,
+                color=garage)) +
+  
+  geom_errorbar(aes(ymin=price-se,
+                    ymax=price+se),
+                width=.2, size=0.7, position=pd) +
+  geom_point(shape=15, size=4, position=pd) +
+  theme_bw() +
+  theme(
+    axis.title.y = element_text(vjust= 1.8),
+    axis.title.x = element_text(vjust= -0.5),
+    axis.title = element_text(face = "bold"))
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+#boxplot of each predictor and interaction
+
+```{r}
+boxplot(price ~ status,
+        data = EugeneHomes,
+        xlab = "Status of Homes",
+        ylab = "Price of Homes in Thousands")
+boxplot(price ~ garage,
+        data = EugeneHomes,
+        xlab = "Number of Garages in Homes",
+        ylab = "Price of Homes in Thousands")
+boxplot(price ~ status:garage,
+        data = EugeneHomes,
+        xlab = "Status x Garage",
+        ylab = "Price of Homes")
+```
+
+
+#Fitting Model and Conducting ANOVA (lm is type 2)
+
+```{r}
+model = lm(price ~ status + garage + status:garage,
+             data = EugeneHomes)
+anova(model)
+summary(model)
+```
+
+
+#Checking Assumptions
+
+```{r}
+hist(residuals(model))
+plot(fitted(model),
+     residuals(model))
+```
+
+
+#multiple comparisons Bonferroni?
+
+#Corilation
+#First, create a subset without variables to right of status
+
+```{r}
+library(dplyr)
+
+EugeneHomes = select(EugeneHomes,
+                     price,
+                        size,
+                        lot,
+                        bath,
+                        bed,
+                        bathbed,
+                        year,
+                        age,
+                        agesq,
+                        garage,
+                        status)
+```
+
+
+#to view new subset dataset with the terms specified
+
+```{r}
+library(FSA)
+
+headtail(EugeneHomes)
+```
+
+
+#to view corrilation
+
+```{r}
+library(psych)
+
+corr.test(EugeneHomes,
+          use = "pairwise", 
+          method = "pearson", 
+          adjust = "none")
+```
+
+
+#to view scatterplot matrix of all variables against each other
+
+```{r}
+pairs(data=EugeneHomes, ~ price + size + lot + bath + bed + bathbed 
+      + year + age + agesq + garage + status)
+```
+
+
+#to view correlation with histograms, scatterplots and corrilation
+#numbers
+
+```{r}
+library(PerformanceAnalytics)
+
+chart.Correlation(EugeneHomes,
+                  method="pearson",
+                  histogram=TRUE,
+                  pch=16)
+```
+
+
+#Stepwise procedure to determine the best regression equation
+
+```{r}
+model.null = lm(price ~ 1, data=EugeneHomes)
+model.full = lm(price ~ size + lot + bath + bed + bathbed 
+                + year + age + agesq + garage + status, 
+                data=EugeneHomes)
+
+step(model.null,
+     scope = list(upper=model.full),
+     direction="both",
+     data=EugeneHomes)
+```
+
+
+#Now that we have dropped 2 predictors, we will define the final model
+#this shows coefficients, R-squared, and overall p-value
+
+```{r}
+model.final = lm(price ~ garage + agesq + lot + status + size
+                 + bed + bathbed + bath, data = EugeneHomes)
+summary(model.final) 
+```
+
+
+#We can also do our Analysis of Variance for individual terms
+
+```{r}
+library(car)
+
+Anova(model.final,
+      Type="II")
+```
+
+
+#plot of predicted values with 1-to-1 line
+
+```{r}
+EugeneHomes$predy = predict(model.final)
+
+plot(predy ~ price,
+     data=EugeneHomes,
+     pch = 16,
+     xlab="Actual reponse value",
+     ylab="PRedicted response value")
+
+abline(0,1, col="blue", lwd=2)
+```
+
+
+#Histogram of Residuals
+
+```{r}
+hist(residuals(model.final),col="darkgray")
+```
+
+
+#plot of Fitted vs. Residuals
+
+```{r}
+plot(fitted(model.final),
+     residuals(model.final))
+```
+
+
+
