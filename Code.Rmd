@@ -1,7 +1,7 @@
 ---
 title: "Code"
 author: "Group 6"
-output: html_document
+output: github_document
 ---
 #import code
 
