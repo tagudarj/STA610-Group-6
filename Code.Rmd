@@ -41,7 +41,6 @@ ggplot(sum, aes(x=status,
     axis.title.y = element_text(vjust= 1.8),
     axis.title.x = element_text(vjust= -0.5),
     axis.title = element_text(face = "bold"))
-```
 
 
 #boxplot of each predictor and interaction
@@ -133,6 +132,7 @@ pairs(data=EugeneHomes, ~ price + size + lot + bath + bed + bathbed
 ```
 
 
+
 #to view correlation with histograms, scatterplots and corrilation
 #numbers
 
@@ -209,6 +209,7 @@ hist(residuals(model.final),col="darkgray")
 plot(fitted(model.final),
      residuals(model.final))
 ```
+
 
 
 
