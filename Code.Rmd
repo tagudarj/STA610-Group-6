@@ -1,13 +1,14 @@
 ---
 title: "Code"
 author: "Group 6"
-output: github_document
+output: html_document
 ---
 #import code
 
 
 
 ```{r read_data}
+install.packages("tidyverse")
 library(tidyverse)
 EugeneHomes <- read_csv("data/EugeneHomes.csv")
 ```
@@ -26,21 +27,11 @@ sum
 #interaction plot using summary statistics
 
 ```{r}
-library(ggplot2)
-pd = position_dodge(.2)
-ggplot(sum, aes(x=status,
-                y=price,
-                color=garage)) +
-  
-  geom_errorbar(aes(ymin=price-se,
-                    ymax=price+se),
-                width=.2, size=0.7, position=pd) +
-  geom_point(shape=15, size=4, position=pd) +
-  theme_bw() +
-  theme(
-    axis.title.y = element_text(vjust= 1.8),
-    axis.title.x = element_text(vjust= -0.5),
-    axis.title = element_text(face = "bold"))
+interaction.plot(x.factor = EugeneHomes$garage, trace.factor = EugeneHomes$status, 
+                 response = EugeneHomes$price, fun = mean, 
+                 type = "b", legend = TRUE, 
+                 xlab = "Number of Garages", ylab="Price of Homes",
+                 pch=c(1,19), col = c("#00AFBB", "#E7B800"))
 ```
 
 
