@@ -201,7 +201,7 @@ abline(0,1, col="blue", lwd=2)
 ```{r}
 model = lm(price ~ status + garage + status:garage,
              data = EugeneHomes)
-anova(model)
+Anova(model, type = 3)
 summary(model)
 ```
 

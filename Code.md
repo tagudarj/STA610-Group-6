@@ -634,17 +634,18 @@ abline(0,1, col="blue", lwd=2)
 ``` r
 model = lm(price ~ status + garage + status:garage,
              data = EugeneHomes)
-anova(model)
+Anova(model, type = 3)
 ```
 
-    ## Analysis of Variance Table
+    ## Anova Table (Type III tests)
     ## 
     ## Response: price
-    ##               Df Sum Sq Mean Sq F value   Pr(>F)   
-    ## status         1  17232 17232.5  5.3348 0.023775 * 
-    ## garage         1  23172 23171.9  7.1735 0.009161 **
-    ## status:garage  1     22    21.8  0.0067 0.934777   
-    ## Residuals     72 232576  3230.2                    
+    ##               Sum Sq Df F value    Pr(>F)    
+    ## (Intercept)    59774  1 18.5046 5.246e-05 ***
+    ## status           443  1  0.1373    0.7121    
+    ## garage          2120  1  0.6562    0.4206    
+    ## status:garage     22  1  0.0067    0.9348    
+    ## Residuals     232576 72                      
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
